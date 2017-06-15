@@ -36,9 +36,10 @@
         var dt = 1/fps;
 
         
-        var player = new Sprite(500,650);//(200,200);
+        var player = new Sprite(480,710);//(200,200);
         player.width = 516;
         player.height = 516;
+        player.angle = -90;
 
        // var background_A = new Sprite(0,0);
         var level = new Level()
@@ -81,7 +82,7 @@
              if(spawn == 0 ){
              	level.spawn();
              	spawn = 400;
-             	spawn = spawn - nivel*10;
+             	spawn = 50 + spawn - nivel*10;
              }
 
           	//checar colisoes
@@ -91,6 +92,10 @@
           		 life--;
           	});
 
+            level.colisaoBullets(function(inimigo, alvo){
+          		 console.log("acerto");
+          		 score = score + 200;
+          	});
 
           	player.moverPlayer(dt); 	
             level.mover(dt);
@@ -101,10 +106,11 @@
           	// desenhar na tela player e recursos do cenario(inimigos, balas)
        	  	//player.desenharImg(ctx, imgLoad.images["player"]);
          	//level.desenharImg(ctx,imgLoad);
-
+            
+            level.desenharImg(ctx,imgLoad.images["shot"]);
          	player.desenharImg(ctx,imgLoad.images["player"]);
          	level.desenhar(ctx);
-         	level.desenharImg(ctx,imgLoad.images["shot"]);
+         	
          	
 
        	    drawHUD();
@@ -157,12 +163,12 @@
           case 40:
             break;  
           case 37:
-               player.vang = -80;
+               player.vang = -50;
             break;
           case 38:
             break;
           case 39:
-               player.vang = 80;
+               player.vang = 50;
           default:
         }
       });

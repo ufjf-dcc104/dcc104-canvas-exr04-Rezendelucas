@@ -57,7 +57,7 @@ Level.prototype.mover = function (dt) {
       }
     }
   for (var i = this.bullet.length - 1; i >= 0; i--) {
-      this.bullet[i].mover(dt);
+      this.bullet[i].moverAng(dt);
       if(
           this.bullet[i].x >  1000 ||
           this.bullet[i].x < -1000 ||
@@ -87,15 +87,15 @@ Level.prototype.desenhar = function (ctx) {
 Level.prototype.fire = function (alvo, audiolib, key, vol){
   if(alvo.cooldown>0) return;
   var tiro = new Sprite();
-  tiro.x = alvo.x ;
-  tiro.y = alvo.y - 40;
+  tiro.x = alvo.x + 5;
+  tiro.y = alvo.y - 10;
   tiro.angle = alvo.angle;
-  tiro.vy = -600;
-  tiro.width = 16;
-  tiro.height = 32;
+  tiro.am = 1000;
+  tiro.width = 50;
+  tiro.height = 100;
   tiro.imgkey = "shot";
   this.bullet.push(tiro);
-  alvo.cooldown = 1;
+  alvo.cooldown = 0.8;
   if(audiolib && key) audiolib.play(key,vol);
 }
 
@@ -115,7 +115,17 @@ Level.prototype.colidiuCom = function (resolveColisao) {
      }
  };
 
-
+Level.prototype.colisaoBullets = function (resolveColisao) {
+    for (var i = 0; i < this.meteor.length; i++) {
+      for (var j = 0;  j < this.bullet.length; j++) {
+        if(this.bullet[j].colidiuCom(this.meteor[i])){
+          resolveColisao(this.builds[j], this.meteor[i]);
+          this.bullet.splice(j, 1);
+          this.meteor.splice(i, 1);
+        }
+       }
+     }
+ };
 
 
 

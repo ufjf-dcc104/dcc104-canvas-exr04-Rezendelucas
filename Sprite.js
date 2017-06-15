@@ -53,21 +53,25 @@ Sprite.prototype.desenharCubo = function (ctx) {
 };
 
 Sprite.prototype.desenharCirculo = function (ctx) {
-  ctx.beginPath();
-  ctx.arc(this.x, this.y, 30, 0, 2*Math.PI);
-  ctx.closePath();
-  ctx.fillStyle = "red";
-  ctx.fill();
+    ctx.fillStyle = "rgba(241, 178, 21, 0.3)";
+    ctx.strokeStyle = "blue";
+    ctx.beginPath();
+    var radius = 30;  //raio do circulo = diametro/2
+    var anticlockwise = true;
+    var startAngle = 0;     //inicia o arco na posição 0 graus (direita)
+    var endAngle = Math.PI*2; //termina o arco na posição 360 graus (volta completa)
+    ctx.arc(this.x, this.y, radius, startAngle, endAngle, anticlockwise);
+    ctx.closePath();
+    ctx.stroke(); //desenha a borda
+    ctx.fill();   //preenche
 
-  ctx.strokeStyle = "blue";
-  ctx.stroke();
-  ctx.strokeRect(this.x - 30, this.y - 30, 60, 60);
 };
 
 Sprite.prototype.desenharImg = function (ctx, img) {
   ctx.save();
   ctx.translate(this.x, this.y);
   ctx.rotate(this.angle*2*Math.PI/360);
+  ctx.rotate(Math.PI/2);
   ctx.fillStyle = this.color;
   ctx.drawImage(img, -this.width/2, -this.height/2, this.width, this.height);
   if(this.debug){
@@ -112,12 +116,27 @@ Sprite.prototype.moverPlayer = function (dt) {
   this.vy = this.vy + (this.ay+this.g)*dt;
   this.x = this.x + this.vx*dt;
   this.y = this.y + this.vy*dt;
-  if(this.angle < 100 && this.angle > -100)
+  if(this.angle > -180 && this.angle < 0)
      this.angle = this.angle + this.vang*dt;
-   else if(this.angle >= 100)
-     this.angle = 99;
+   else if(this.angle <= -180)
+     this.angle = -179;
    else
-     this.angle = -99;
+     this.angle = -1;
+  if(this.cooldown>0) {
+    this.cooldown -= dt;
+  } else {
+    this.cooldown = 0;
+  }
+};
+
+Sprite.prototype.moverAng = function (dt) {
+  this.angle = this.angle + this.vang*dt;
+  this.ax = this.am * Math.cos(Math.PI * this.angle/180);
+  this.ay = this.am * Math.sin(Math.PI * this.angle/180);
+  this.vx = this.vx + this.ax*dt;
+  this.vy = this.vy + (this.ay+this.g)*dt;
+  this.x = this.x + this.vx*dt;
+  this.y = this.y + this.vy*dt;
   if(this.cooldown>0) {
     this.cooldown -= dt;
   } else {
