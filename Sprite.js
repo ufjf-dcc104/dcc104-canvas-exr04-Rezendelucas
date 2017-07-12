@@ -53,18 +53,15 @@ Sprite.prototype.desenharCubo = function (ctx) {
 };
 
 Sprite.prototype.desenharCirculo = function (ctx) {
-    ctx.fillStyle = "rgba(241, 178, 21, 0.3)";
-    ctx.strokeStyle = "blue";
-    ctx.beginPath();
-    var radius = 30;  //raio do circulo = diametro/2
-    var anticlockwise = true;
-    var startAngle = 0;     //inicia o arco na posição 0 graus (direita)
-    var endAngle = Math.PI*2; //termina o arco na posição 360 graus (volta completa)
-    ctx.arc(this.x, this.y, radius, startAngle, endAngle, anticlockwise);
-    ctx.closePath();
-    ctx.stroke(); //desenha a borda
-    ctx.fill();   //preenche
+  ctx.beginPath();
+  ctx.arc(this.x, this.y, 30, 0, 2*Math.PI);
+  ctx.closePath();
+  ctx.fillStyle = "red";
+  ctx.fill();
 
+  ctx.strokeStyle = "blue";
+  ctx.stroke();
+  ctx.strokeRect(this.x - 30, this.y - 30, 60, 60);
 };
 
 Sprite.prototype.desenharImg = function (ctx, img) {
